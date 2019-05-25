@@ -1,51 +1,94 @@
-var request = require('request');
-
-var optionParams = {
-    q:"저라뎃",
-    part:"snippet",
-    key:"AIzaSyCgGa6aM7taXs4bajtYukbc_EQAKTLVTNc",
-    type:"video",
-    maxResult2:5,
-    regionCode:"KR",
-    videoDuration:"short"
-};
-optionParams.q = encodeURI(optionParams.q);
-
-var url = "https://www.googleapis.com/youtube/v3/search?";
-for (var option in optionParams)
-{
-    url+=option+"="+optionParams[option]+"&";
+var http = require('http');
+var fs = require('fs');
+var url = require('url');
+var qs = require('querystring');
+ 
+function templateHTML(title, list, body){
+  return `
+  <!doctype html>
+  <html>
+  <head>
+    <title>Youtube MPL - ${title}</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1><a href="/">Youtube MPL</a></h1>
+    ${list}
+    <a href="/create">create</a>
+    ${body}
+  </body>
+  </html>
+  `;
 }
-
-url = url.substr(0,url.length-1);
-
-var VideoIds = new Array();
-var idx = 0;
-request(url, function(err,res,body){
-    //console.log(body)
-    var data = JSON.parse(body).items;
-
-    for(var content in data)
-    {
-        VideoIds[idx]=(data[content].id.videoId);
-        idx++;
+function templateList(filelist){
+  var list = '<ul>';
+  var i = 0;
+  while(i < filelist.length){
+    list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`;
+    i = i + 1;
+  }
+  list = list+'</ul>';
+  return list;
+}
+ 
+var app = http.createServer(function(request,response){
+    var _url = request.url;
+    var queryData = url.parse(_url, true).query;
+    var pathname = url.parse(_url, true).pathname;
+    if(pathname === '/'){
+      if(queryData.id === undefined){
+        fs.readdir('./data', function(error, filelist){
+          var title = 'Welcome';
+          var description = 'Youtube MPL!!';
+          var list = templateList(filelist);
+          var template = templateHTML(title, list, `<h2>${title}</h2>${description}`);
+          response.writeHead(200);
+          response.end(template);
+        });
+      } else {
+        fs.readdir('./data', function(error, filelist){
+          fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+            var title = queryData.id;
+            var list = templateList(filelist);
+            var template = templateHTML(title, list, `<h2>${title}</h2>${description}`);
+            response.writeHead(200);
+            response.end(template);
+          });
+        });
+      }
+    } else if(pathname === '/create'){
+      fs.readdir('./data', function(error, filelist){
+        var title = 'Download files';
+        var list = templateList(filelist);
+        var template = templateHTML(title, list, `
+          <form action="http://localhost:3000/create_process" method="post">
+            <p><input type="text" name="title" placeholder="title"></p>
+            <p><input type="text" name="count" placeholder="count"></p>
+            <p>
+              <input type="submit">
+            </p>
+          </form>
+        `);
+        response.writeHead(200);
+        response.end(template);
+      });
+    } else if(pathname === '/create_process'){
+      var body = '';
+      request.on('data', function(data){
+          body = body + data;
+      });
+      request.on('end', function(){
+          var post = qs.parse(body);
+          var title = post.title;
+          var count = post.count;
+          fs.writeFile(`data/${title}`, count, 'utf8', function(err){
+            response.writeHead(302, {Location: `http://localhost:3000/`});
+            response.end();
+          })
+      });
+    } else {
+      response.writeHead(404);
+      response.end('Not found');
     }
-    console.log(VideoIds.length);
-    console.log(VideoIds[0]);
-    console.log(typeof(VideoIds[1]));
-
-    //다운로드 부분
-    var fs = require('fs');
-    var youtubedl = require('youtube-dl');
-    var video = youtubedl('http://www.youtube.com/watch?v='.concat(VideoIds[1]));
-
-    video.on('info',function(info)
-    {
-        console.log('Download started');
-        console.log('filename : '+ info.filename);
-        console.log('size : '+info.size);
-    });
-
-    video.pipe(fs.createWriteStream('justlikethat.mp4'));
 });
-
+app.listen(3000);
