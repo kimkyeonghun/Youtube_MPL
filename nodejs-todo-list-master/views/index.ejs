@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<link rel="stylesheet" href="/bootstrap.min.css" />
+		<script>
+				function fnGetList(sGetToken){
+					var $getVal = $("#search_box").val();
+						if ($getVal==""){
+							alert("검색어를 입력하세요.");
+							$("#search_box").focus();
+							return;
+					}
+				$("#get_view").empty();
+				$("#nav_view").empty();
+				var sTargetUrl ="https://www.googleapis.com/youtube/v3/search?part=snippet&order=relevance"
+					+ "&q="+encodeURIComponent($getVal)+"&key={AIzaSyCTR9nHa9PheDMJO9O91Oj8HRJcu81bP_M}";
+				if(sGetToken){
+					sTargetUrl +="&pageToken="+sGetToken;
+				}
+				$.ajax({
+					type:"POST",
+					url : sTargetUrl,
+					dataType: "jsonp",
+					success: function(jdata){
+					console.log(jdata);
+		
+					$(jdata.items).each(function(i){
+						$("#get_view").append("<p class='box'><a href='https://youtu.be/'+this.id.videoId+' 'target='_blank'>"
+						+"<span>"+this.snippet.title+"</span></a></p>");
+					}).promise().done(function(){
+						if(jdata.prevPageToken){
+							$("#nav_view").append("<a href='javascript:fnGetList(\' '+jdata.prevPageToken+'\');'><이전페이지></a>");
+						}
+						if(jdata.nextPageToken){
+							$("#nav_view").append("<a href='javascript:fnGetList(\''+jdata.nextPageToken+'\');'><다음페이지></a>");
+						}
+					});
+				},
+				error:function(xhr,textStatus){
+					console.log(xhr.responseText);
+					alert("에러");
+					return;
+				}
+			});
+		}
+		</script>
+	</head>
+	<body>
+		<h1><%= title %></h1>
+		<p>Welcome to <%= title %></p>
+		<form class="form-inline">	<!-- 새로운 ToDo 항목 추가 -->
+			<div class="form-group">
+				<input type="text" class="form-control" id="new_todo" placeholder="유튜브명">
+			</div>
+			<button type="button" class="btn btn-primary">추가</button>
+			<div class="form-group">
+				<input type="text" class="form-control" id="search_box" placeholder="키워드 입력">
+			</div>
+			<buttom type="button" onclick="fnGetList();" class="btn btn-primary">검색</buttom>
+		</form>
+		<table class="table">	<!-- ToDo 목록 -->
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>제목</th>
+					<th>다운로드</th>
+					<th>삭제</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+	<script src="/jquery-3.1.0.min.js"></script>
+	<script src="/bootstrap.min.js"></script>
+	<script src="/javascripts/todo.js"></script>	<!-- ToDo 기능 구현 내용 -->
+</html>
