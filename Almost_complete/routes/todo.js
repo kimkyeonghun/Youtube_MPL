@@ -43,10 +43,6 @@ exports.add = function(req, res1){	// 새로운 ToDo 항목 추가하기
 		regionCode:"KR",
 		order:"viewCount"
 	};
-
-
-	console.log("'");
-	console.log("`");
 	optionParams.q = encodeURI(optionParams.q);
 
 	var url="https://www.googleapis.com/youtube/v3/search?";
@@ -66,7 +62,6 @@ exports.add = function(req, res1){	// 새로운 ToDo 항목 추가하기
 			'encoding':'utf8'
 		},function(err,data){
 			data= JSON.parse(data);
-			data.list=[];
 			for (var content in data2){
 				var todo = {	// 기본 ToDo 항목 형식
 					'contents': '',
@@ -84,24 +79,6 @@ exports.add = function(req, res1){	// 새로운 ToDo 항목 추가하기
 			}
 		});
 	});
-
-	//todo.contents = req.body.contents;
-/*
-	fs.readFile('./todo_list.json', {
-		'encoding': 'utf8'
-	}, function (err, data) {
-		data = JSON.parse(data);
-		
-		for (var i=0;i<5;i++)
-		{
-			data.list.push(VideoIds[i]);
-		}
-			// 새로운 ToDo 항목 추가
-		
-		fs.writeFile('./todo_list.json', JSON.stringify(data), function (err) {
-			res.json(true);
-		});
-	});*/
 };
 
 exports.complete = function(req, res){	// 선택한 ToDo 항목 완료하기

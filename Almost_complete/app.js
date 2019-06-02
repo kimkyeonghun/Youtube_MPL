@@ -7,8 +7,10 @@
 var express = require('express')
   , routes = require('./routes')
   , todo = require('./routes/todo')
+  , login =require('./routes/login')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , fs = require('fs');
 
 var app = express();	// 어플리케이션 생성
 var port = 3000;		// 어플리케이션 포트
@@ -36,6 +38,20 @@ app.configure('development', function(){	// 개발 버전
 
 // 라우팅
 app.get('/', routes.index);
+app.get('/login',function(req,res){
+  fs.readFile('./views/login.html',function(error,data){
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.end(data);
+  })
+});
+app.get('/signup',function(req,res){
+  fs.readFile('./views/signup.html',function(error,data){
+    res.writeHead(200,{'Content-Type':'text/html'});
+    res.end(data);
+  })
+})
+app.get('/LogInForm',login.LogInForm);
+app.post('/SignUpForm',login.SignUpForm);
 app.get('/list', todo.list);
 app.post('/add', todo.add);
 app.post('/complete', todo.complete);

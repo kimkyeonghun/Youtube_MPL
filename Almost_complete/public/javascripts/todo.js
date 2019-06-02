@@ -3,7 +3,6 @@ $(document).ready(function () {
 		$.ajax('/list', {
 			'success': function (list) {
 				var trs = '';
-
 				list = JSON.parse(list).list;
 
 				for(var i = 0, len = list.length; i < len; i++) {	// 테이블 내용 만들기
@@ -21,7 +20,7 @@ $(document).ready(function () {
 	};
 	
 	get_list();
-	
+
 	$('.form-inline button').click(function () {	// 새로운 할 일 추가하기
 		var $getVal = $('#new_todo').val();
 		var $getVal2 = $('#count').val();
