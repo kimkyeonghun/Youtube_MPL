@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
 
     // 로그인 처리
@@ -27,7 +28,8 @@ $(document).ready(function(){
                 for (var i=0, len=list.length; i < len; i++){
                     if (list[i].userId==Info['userId']){
                         if (list[i].password==Info['password']){
-                            location.href='/';
+                            location.href='/Vlist?API='+list[i].API;
+                            return;
                         }
                     }
                 }

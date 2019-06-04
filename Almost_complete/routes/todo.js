@@ -33,11 +33,12 @@ exports.add = function(req, res1){	// 새로운 ToDo 항목 추가하기
 
 	//유튜브 api 이용 검색부분
 
-	console.log(req.body);
+	var datas=fs.readFileSync('./API_Key.json',{'encoding':'utf8'});
+	datas=JSON.parse(datas);
 	var optionParams = {
 		q:req.body.contents,
 		part:"snippet",
-		key:"AIzaSyCTR9nHa9PheDMJO9O91Oj8HRJcu81bP_M",
+		key: datas.API,
 		type:"video",
 		maxResults: Number(req.body.counts),
 		regionCode:"KR",

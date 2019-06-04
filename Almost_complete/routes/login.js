@@ -7,7 +7,6 @@ exports.LogInForm=function(req,res){
 			fs.readFile('./user_list.json', {
 				'encoding': 'utf8'
 			}, function (err, list) {
-				console.log(list);
 				res.json(list);
 			});
 		} else {
