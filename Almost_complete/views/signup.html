@@ -6,14 +6,52 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
+<meta name="description" content="The Overflowing church website's main page" />
+<meta name="author" content="unikys@gmail.com" />
+  <style>
+            #topMenu {
+                    height: 30px;
+                    width: 1700px;
+            }
+            #topMenu ul li {
+                    list-style: none;
+                      color: white;
+                    background-color: #2d2d2d;
+                    float: left;
+                    line-height: 30px;
+                    vertical-align: middle;
+                    text-align: center;
+            }
+            #topMenu .menuLink {
+                    text-decoration:none;
+                    color: white;
+                    display: block;
+                    width: 150px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    font-family: "Trebuchet MS";
+            }
+            #topMenu .menuLink:hover {
+                    color: red;
+                    background-color: #4d4d4d;
+            }
+  </style>
 <title>회원가입 페이지</title>
 </head>
 <form class="form-horizontal">
 <fieldset>
+  <legend>
+    <nav id="topMenu" >
+        <ul class="nav navbar-nav">
+          <a class="menuLink" href="https://www.youtube.com/" target = "_blank"><img src = "http://tech.kobeta.com/wp-content/uploads/2018/08/2-1.jpg" width = 150></a>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a class="menuLink" href="/">뒤로가기</a></li>
+        </ul>
+      </nav>
+    </legend>
 
 <!-- Form Name -->
-<legend>새로운 사용자 등록</legend>
 
 <!-- Text input-->
 <div class="form-group">

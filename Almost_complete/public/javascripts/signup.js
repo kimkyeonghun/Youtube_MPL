@@ -36,7 +36,7 @@ $(function() {
                 'password' : $('#passwd').val(),
             },
             'success': function(e){
-                location.href='/login';
+                location.href='/';
             }
         }) 
 })

@@ -37,11 +37,18 @@ app.configure('development', function(){	// 개발 버전
 });
 
 // 라우팅
-app.get('/Vlist', main.index);
+app.get('/Vlist',function(req,res){
+  fs.readFile('./views/index.ejs',function(error,data){
+    res.writeHead(200,{'Content-Type':'text/html'});
+    res.end(data);
+    return;
+  })
+});
 app.get('/',function(req,res){
   fs.readFile('./views/login.html/',function(error,data){
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.end(data);
+    return;
   })
 });
 app.get('/signup',function(req,res){

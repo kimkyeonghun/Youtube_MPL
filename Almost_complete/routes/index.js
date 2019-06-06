@@ -10,6 +10,8 @@ exports.index = function(req, res){
   }
   fs.writeFile('./API_Key.json', JSON.stringify(data), function (err) {	// todo_list.json 파일 쓰기
     res.json(data);
+    return;
   });
   res.render('index', { title: '나만의 YOUTUBE 리스트' });
+  return;
 };

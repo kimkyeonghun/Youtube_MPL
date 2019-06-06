@@ -52,7 +52,6 @@ $(document).ready(function () {
 			},
 			'success': get_list
 		});
-		alert("다운로드가 완료되었습니다.");
 	});
 	
 	$('tbody').on('click', '.btn-danger', function () {	// 선택한 할 일 삭제하기
